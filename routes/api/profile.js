@@ -9,6 +9,8 @@ const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 // Load input validation
 const validateProfileInput = require('../../validations/profile');
+const validateExperienceInput = require('../../validations/experience');
+const validateEducationInput = require('../../validations/education');
 
 // @route   GET api/profile/test
 // @desc    Tests profile route
@@ -90,7 +92,6 @@ router.get('/user/:user_id', (req, res) => {
     .catch(error => res.status(400).json({ profile: 'There is no profile for this user' }));
 });
 
-
 // @route   POST api/profile
 // @desc    Create or update user's profile
 // @access  Private
@@ -155,6 +156,76 @@ router.post(
                 .then(profile => res.json(profile));
             })
         }
+      })
+  }
+);
+
+// @route   POST api/profile/experience
+// @desc    Add experience to profile
+// @access  Private
+router.post(
+  '/experience',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateExperienceInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        const newExp = {
+          title: req.body.title,
+          company: req.body.company,
+          location: req.body.location,
+          from: req.body.from,
+          to: req.body.to,
+          current: req.body.current,
+          description: req.body.description
+        }
+
+        // Add to experience array (in beginning)
+        profile.experience.unshift(newExp);
+
+        profile.save()
+          .then(profile => res.json(profile));
+      })
+  }
+);
+
+// @route   POST api/profile/education
+// @desc    Add education to profile
+// @access  Private
+router.post(
+  '/education',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateEducationInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        const newEdu = {
+          school: req.body.school,
+          degree: req.body.degree,
+          field_of_study: req.body.field_of_study,
+          from: req.body.from,
+          to: req.body.to,
+          current: req.body.current,
+          description: req.body.description
+        }
+
+        // Add to education array (in beginning)
+        profile.education.unshift(newEdu);
+
+        profile.save()
+          .then(profile => res.json(profile));
       })
   }
 );
