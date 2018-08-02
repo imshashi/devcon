@@ -3,6 +3,7 @@ import {
   GET_PROFILE,
   PROFILE_LOADING,
   CLEAR_CURRENT_PROFILE,
+  SET_CURRENT_USER,
   GET_ERRORS
 } from './types';
 
@@ -37,6 +38,27 @@ export const createProfile = (profileData, history) => dispatch => {
         payload: error.response.data
       })
     )
+}
+
+// Delete account & profile
+
+export const deleteAccount = () => dispatch => {
+  if(window.confirm('Are you sure? This can not be undone!')){
+    axios
+      .delete('/api/profile')
+      .then(res =>
+        dispatch({
+          type: SET_CURRENT_USER,
+          payload: {}
+        })
+      )
+      .catch(error =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: error.response.data
+        })
+      )
+  }
 }
 
 // Profile loading
