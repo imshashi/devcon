@@ -110,13 +110,13 @@ router.post(
     const profileFields = {};
     profileFields.user = req.user.id;
 
-    if (req.body.handle) profileFields.handle = req.body.handle;
-    if (req.body.company) profileFields.company = req.body.company;
-    if (req.body.website) profileFields.website = req.body.website;
-    if (req.body.location) profileFields.location = req.body.location;
-    if (req.body.bio) profileFields.bio = req.body.bio;
-    if (req.body.status) profileFields.status = req.body.status;
-    if (req.body.github_username) profileFields.github_username = req.body.github_username;
+    if (req.body.handle !== null) profileFields.handle = req.body.handle;
+    if (req.body.company !== null) profileFields.company = req.body.company;
+    if (req.body.website !== null) profileFields.website = req.body.website;
+    if (req.body.location !== null) profileFields.location = req.body.location;
+    if (req.body.bio !== null) profileFields.bio = req.body.bio;
+    if (req.body.status !== null) profileFields.status = req.body.status;
+    if (req.body.github_username !== null) profileFields.github_username = req.body.github_username;
     // Skills - split into an array
     if (typeof req.body.skills !== 'undefined') {
       profileFields.skills = req.body.skills.split(',');
